@@ -148,6 +148,7 @@ Token* generateTokens(unsigned char* file_content) {
 					state = GREATER;
 				}
 				else if (character == '\'') {
+					pStartCharacter = file_content;
 					file_content++;
 					state = CHAR_STATE_0;
 				}
@@ -308,73 +309,29 @@ Token* generateTokens(unsigned char* file_content) {
 					added = addToken(tokenList, &token, GREATER, line);
 				break;
 			case CHAR_STATE_0:
-				pStartCharacter = file_content;
 				if (character == '\\')
 					state = ESCAPE_CHARS;
-				else if (character == '\'') {
-					pStartCharacter = &null;
-					state = CT_CHAR;
-				}
-				else if (character != '\\')
-					state = CHAR_STATE_1;
-			
+				else
+					state = CHAR_STATE_2;
+				file_content++;
 				break;
 			case ESCAPE_CHARS:
-				file_content++;
-				if (character == 'a' || character == 'b' ||
-					character == 'f' || character == 'n' ||
-					character == 'r' || character == 't' ||
-					character == 'v' || character == '\'' ||
-					character == '\\' || character == '?' ||
-					character == '\\0') {
-					state = CHAR_STATE_1;
-					switch (character) {
-					case 'a':
-						prevCharacter = '\a';
-						break;
-					case 'b':
-						prevCharacter = '\b';
-						break;
-					case 'f':
-						prevCharacter = '\f';
-						break;
-					case 'n':
-						prevCharacter = '\n';
-						break;
-					case 'r':
-						prevCharacter = '\r';
-						break;
-					case 't':
-						prevCharacter = '\t';
-						break;
-					case 'v':
-						prevCharacter = '\v';
-						break;
-					case '\'':
-						prevCharacter = '\'';
-						break;
-					case '\\':
-						prevCharacter = '\\';
-						break;
-					case '?':
-						prevCharacter = '\?';
-						break;
-					case '\0':
-						prevCharacter = '\0';
-						break;
-					}
-				}
+				prevCharacter = escapeChar(character);
+				state = CHAR_STATE_2;
 				file_content++;
 				break;
 			case CHAR_STATE_1:
-				if (character == '\'')
-					state = CT_CHAR;
-				else if (character >= 0 || character < 255) {
+				
+				break;
+
+			case CHAR_STATE_2:
+				if (character == '\'') {
 					state = CT_CHAR;
 				}
-				else//error careful
-					return tokenList->next;
-				file_content++;
+				else {
+					//error
+				}
+
 				break;
 			case CT_CHAR:
 				added = addToken(tokenList, &token, CT_CHAR, line);
@@ -383,13 +340,27 @@ Token* generateTokens(unsigned char* file_content) {
 				else
 					memcpy(&token->integer, &prevCharacter, 1);
 				file_content++;
-				break;
+					break;
 			case STRING_STATE_0:
-				while (character != '\"') {
-					file_content++;
-					character = *file_content;
+				if (character == '\\') {
+					*file_content = 7;
+					state = ESCAPE_STRING;
 				}
-				state = CT_STRING;
+				else 
+					state = STRING_STATE_2;
+				file_content++;
+				break;
+			case ESCAPE_STRING:
+				*file_content = escapeChar(character);
+				state = STRING_STATE_2;
+				file_content++;
+				break;
+			case STRING_STATE_2:
+				if (character == '"') {
+					state = CT_STRING;
+				}
+				else
+					state = STRING_STATE_0;
 				break;
 			case CT_STRING:
 				id_length = file_content - pStartCharacter;

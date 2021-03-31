@@ -10,7 +10,7 @@ printTokens(Token* tokens) {
 	printf("COD : %d  | ", tokens->code);
 	switch (tokens->code) {
 	case CT_INT:
-			printf("ID: %s", "int");
+			printf("ID: %s | VALUE : %d", "int",tokens->integer);
 			break;
 	case ID:
 			printf("Variable_Name : %s", tokens->string);
@@ -89,16 +89,16 @@ printTokens(Token* tokens) {
 			printf("ID : %s", "void");
 			break;
 	case CT_CHAR:
-			printf("ID : %s", "char");
+			printf("ID : %s | VALUE  %c", "char",tokens->integer);
 			break;
 	case CT_STRING:
-			printf("ID : %s", "string");
+			printf("ID : %s | VALUE : %s", "string",tokens->string );
 			break;
 	case DIV:
 			printf("ID : %s", "DIV");
 			break;
 	case CT_REAL:
-			printf("ID : %s", "CT_REAL");
+			printf("ID : %s | VALUE : %f", "CT_REAL",tokens->real);
 			break;
 	case MULT:
 			printf("ID : %s", "MULT");
@@ -115,14 +115,53 @@ printTokens(Token* tokens) {
 	case AND:
 			printf("ID : %s", "AND");
 			break;
-
-			
-
-
-
 	}
-	
-
 	printf("\n");
 	printTokens(tokens->next);
+}
+
+unsigned char escapeChar(unsigned char character) {
+	unsigned char prevCharacter;
+	switch (character) {
+	case 'a':
+		prevCharacter = '\a';
+		break;
+	case 'b':
+		prevCharacter = '\b';
+		break;
+	case 'f':
+		prevCharacter = '\f';
+		break;
+	case 'n':
+		prevCharacter = '\n';
+		break;
+	case 'r':
+		prevCharacter = '\r';
+		break;
+	case 't':
+		prevCharacter = '\t';
+		break;
+	case 'v':
+		prevCharacter = '\v';
+		break;
+	case '\'':
+		prevCharacter = '\'';
+		break;
+	case '\\':
+		prevCharacter = '\\';
+		break;
+	case '?':
+		prevCharacter = '\?';
+		break;
+	case '\0':
+		prevCharacter = '\0';
+		break;
+	case '\"':
+		prevCharacter = '\"';
+		break;
+	default:
+		prevCharacter = '\a';
+	}
+
+	return prevCharacter;
 }
