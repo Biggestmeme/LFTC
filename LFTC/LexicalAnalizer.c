@@ -28,7 +28,7 @@ int addToken(Token* tokenList,Token** lastToken,int code, int line) {
 
 Token* generateTokens(unsigned char* file_content) {
 	int state = 0;
-	int line = 0;
+	int line = 1;
 	int id_length = 0;
 	int added = 0;
 	int number_base = 10; //default
@@ -168,7 +168,6 @@ Token* generateTokens(unsigned char* file_content) {
 					state = BASE_8_INT;
 				}
 				else {
-					//error
 					return tokenList->next;
 				}
 				break;
@@ -265,7 +264,7 @@ Token* generateTokens(unsigned char* file_content) {
 					added = addToken(tokenList, &token, AND, line);
 				}
 				else
-					//token error
+					return tokenList->next;
 					break;
 			case OR:
 				if (character == '|') {
@@ -274,7 +273,7 @@ Token* generateTokens(unsigned char* file_content) {
 
 				}
 				else
-					//token Error
+					return tokenList->next;
 					break;
 			case NOT:
 				if (character == '=') {
@@ -329,7 +328,7 @@ Token* generateTokens(unsigned char* file_content) {
 					state = CT_CHAR;
 				}
 				else {
-					//error
+					return tokenList->next;
 				}
 
 				break;
@@ -422,8 +421,10 @@ Token* generateTokens(unsigned char* file_content) {
 				token->integer = strtol(pStartCharacter, NULL, number_base);
 				break;
 			case REAL_STATE_0:
-				if (isdigit(character)) 
+				if (isdigit(character))
 					state = REAL_STATE_1;
+				else
+					return tokenList->next;
 				file_content++;
 				break;
 			case REAL_STATE_1:
@@ -433,6 +434,9 @@ Token* generateTokens(unsigned char* file_content) {
 					state = CT_REAL;
 					break;
 				}
+				else
+					return tokenList->next;
+
 				file_content++;
 				break;
 			case REAL_STATE_2:
@@ -484,6 +488,8 @@ Token* generateTokens(unsigned char* file_content) {
 				if (character == '*') {
 					state = COMMENT_STATE_2;
 				}
+				else if (character == '\n')
+					line++;
 				file_content++;
 				break;
 			case COMMENT_STATE_2:					

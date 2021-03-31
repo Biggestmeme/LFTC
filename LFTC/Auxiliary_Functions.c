@@ -1,6 +1,29 @@
 #include "LexicalAnalizer.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
+
+bool checkError(Token* tokens) {
+	Token* temp = calloc(1, sizeof(Token));
+	temp = tokens;
+
+	while (temp->next != NULL) {
+		printTokens(temp);
+		temp = temp->next;
+	}
+
+	if (temp->code != END) {
+		printf("Error at line %d\n", temp->line);
+		return true;
+	}
+	else {
+		printTokens(temp);
+	}
+
+	return false;
+}
+
+
 
 printTokens(Token* tokens) {
 	if (tokens == NULL)
@@ -117,7 +140,6 @@ printTokens(Token* tokens) {
 			break;
 	}
 	printf("\n");
-	printTokens(tokens->next);
 }
 
 unsigned char escapeChar(unsigned char character) {
@@ -165,3 +187,4 @@ unsigned char escapeChar(unsigned char character) {
 
 	return prevCharacter;
 }
+

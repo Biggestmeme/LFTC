@@ -1,6 +1,7 @@
 #pragma once
 #ifndef LEXICALANALIZER_H_
 #define LEXICALANALIZER_H_
+#include <stdbool.h>
 
 enum {
 	START, ID, BREAK, CHAR, DOUBLE, ELSE, FOR, IF, INT, RETURN, STRUCT, VOID, WHILE, CT_INT, CT_REAL, CT_CHAR,
@@ -24,6 +25,7 @@ typedef struct token {
 
 unsigned char escapeChar(unsigned char character);
 Token* generateTokens(unsigned char* file_content);
+bool checkError(Token* tokens);
 printTokens(Token* tokens);
 
 #endif
