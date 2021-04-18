@@ -1,9 +1,8 @@
 #include "LexicalAnalizer.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include <stdbool.h>
 
-bool checkError(Token* tokens) {
+void checkError(Token* tokens) {
 	Token* temp = calloc(1, sizeof(Token));
 	temp = tokens;
 
@@ -14,18 +13,18 @@ bool checkError(Token* tokens) {
 
 	if (temp->code != END) {
 		printf("Error at line %d\n", temp->line);
-		return true;
+		return;
 	}
 	else {
 		printTokens(temp);
 	}
 
-	return false;
+	return;
 }
 
 
 
-printTokens(Token* tokens) {
+void printTokens(Token* tokens) {
 	if (tokens == NULL)
 		return;
 
@@ -112,7 +111,7 @@ printTokens(Token* tokens) {
 			printf("ID : %s", "void");
 			break;
 	case CT_CHAR:
-			printf("ID : %s | VALUE  %c", "char",tokens->integer);
+			printf("ID : %s | VALUE : %c", "char",tokens->integer);
 			break;
 	case CT_STRING:
 			printf("ID : %s | VALUE : %s", "string",tokens->string );

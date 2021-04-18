@@ -144,11 +144,13 @@
     <ClCompile Include="File.c" />
     <ClCompile Include="LexicalAnalizer.c" />
     <ClCompile Include="Main.c" />
+    <ClCompile Include="SyntacticAnalizer.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Auxiliary.h" />
     <ClInclude Include="File.h" />
     <ClInclude Include="LexicalAnalizer.h" />
+    <ClInclude Include="SyntacticAnalizer.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="test_program.txt" />

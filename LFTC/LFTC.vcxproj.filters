@@ -19,6 +19,9 @@
     <Filter Include="Source Files\Lexical Analizer">
       <UniqueIdentifier>{9c206947-d016-46df-aacf-7277323c4f22}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Syntactic Analizer">
+      <UniqueIdentifier>{e401e1ec-43a0-4989-bb8e-9dac62aa153d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.c">
@@ -36,6 +39,9 @@
     <ClCompile Include="Auxiliary_Functions.c">
       <Filter>Source Files\Lexical Analizer</Filter>
     </ClCompile>
+    <ClCompile Include="SyntacticAnalizer.c">
+      <Filter>Source Files\Syntactic Analizer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="File.h">
@@ -45,6 +51,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="LexicalAnalizer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SyntacticAnalizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,5 +1,4 @@
 #include "File.h"
-#include "Auxiliary.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -22,12 +21,11 @@ unsigned char* readFile(const char* PATH) {
 
 	FILE* file = fopen(PATH, "r");
 	if (file == NULL) {
-		Error("File Open");
+		printf("Error open\n");
 	}
 
 	int file_size = fileSize(file);
-	unsigned char* file_content;
-	SAFEALLOC(file_content, unsigned char, file_size);
+	unsigned char* file_content = calloc(file_size, sizeof(unsigned char));
 
 	unsigned char current_character = 0;
 	int index = 0;

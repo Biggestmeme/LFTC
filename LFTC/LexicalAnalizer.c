@@ -335,7 +335,7 @@ Token* generateTokens(unsigned char* file_content) {
 			case CT_CHAR:
 				added = addToken(tokenList, &token, CT_CHAR, line);
 				if (prevCharacter == 255)
-					memcpy(&token->integer, pStartCharacter, 1);
+					memcpy(&token->integer, pStartCharacter+1, 1);
 				else
 					memcpy(&token->integer, &prevCharacter, 1);
 				file_content++;
@@ -396,8 +396,12 @@ Token* generateTokens(unsigned char* file_content) {
 					file_content++;
 					state = REAL_STATE_2;
 				}
-				else if (character >= '0' && character <= '9') {// octal values 0-7
+				else if (character >= '0' && character <= '7') {// octal values 0-7
 					file_content++;
+				}
+				else if (character == '8' || character == '9') {
+					file_content++;
+					state = OCTAL_TO_REAL;
 				}
 				else {
 					number_base = 8;
@@ -416,6 +420,21 @@ Token* generateTokens(unsigned char* file_content) {
 					state = CT_INT;
 				}
 				break;
+			case OCTAL_TO_REAL:
+				if (character == '.') {
+					file_content++;
+					state = REAL_STATE_0;
+				}
+				else if (character >= '0' && character <= '9') {
+					file_content++;
+				}
+				else if (character == 'e' || character == 'E') {
+					state = REAL_STATE_1;
+				}
+				else {
+					state = CT_REAL;
+				}
+				break;
 			case CT_INT:
 				added = addToken(tokenList, &token, CT_INT, line);
 				token->integer = strtol(pStartCharacter, NULL, number_base);
@@ -428,7 +447,9 @@ Token* generateTokens(unsigned char* file_content) {
 				file_content++;
 				break;
 			case REAL_STATE_1:
-				if (character == 'e' || character == 'E')
+				if (isdigit(character))
+					file_content++;
+				else if (character == 'e' || character == 'E')
 					state = REAL_STATE_2;
 				else if (!isdigit(character)) {
 					state = CT_REAL;
